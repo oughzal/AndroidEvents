@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import ma.ofppt.androidevents.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, View.OnTouchListener {
     ActivityMainBinding binding;
     GestureDetectorCompat gestureDetector;
+    Integer[] dices;
+    int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         gestureDetector = new GestureDetectorCompat(this, this);
         gestureDetector.setOnDoubleTapListener(this);
         binding.root.setOnTouchListener(this);
+
+        dices = new Integer[]{R.drawable.dice1,R.drawable.dice2,R.drawable.dice3,R.drawable.dice4,R.drawable.dice5,R.drawable.dice6};
     }
 
     @Override
@@ -98,6 +103,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        double distanceX = e2.getX() - e1.getX();
+        double distanceY = e2.getY() - e1.getY();
+        if(Math.abs(distanceX) > Math.abs(distanceY)){
+            if(distanceX < 0){
+                index++;
+                if(index>5) index =0;
+            }else{
+                index--;
+                if(index<0) index=5;
+            }
+            binding.imageView.setImageResource(dices[index]);
+            return true;
+        }
         return false;
     }
 
